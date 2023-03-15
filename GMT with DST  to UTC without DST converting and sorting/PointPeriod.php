@@ -1,7 +1,5 @@
 <?php
 
-namespace AppBundle\Entity\Erp;
-
 use Carbon\Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;

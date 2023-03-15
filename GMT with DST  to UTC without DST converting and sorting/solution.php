@@ -1,6 +1,5 @@
 <?php
 //php 7.1 code
-use AppBundle\Entity\Erp\PointPeriod;
 
 /**
  * example of solution's date sorting
