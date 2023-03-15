@@ -16,9 +16,9 @@
  * 30.10.2022 03:00:00
  * ...
  */
-
 include __DIR__ .'/PointPeriod.php';
 date_default_timezone_set('Europe/Berlin');
+
 $start = DateTime::createFromFormat('!Y-m-d', '2022-01-01');
 $interval = new \DateInterval('PT15M');
 $end = DateTime::createFromFormat('!Y-m-d', '2023-01-01');
