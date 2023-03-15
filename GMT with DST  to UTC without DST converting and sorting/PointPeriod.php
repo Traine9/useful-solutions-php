@@ -7,8 +7,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Erp\Repository\PointPeriodRepository")
- * @ORM\Table(name="erp_point_period",
+ * @ORM\Entity()
+ * @ORM\Table(name="point_period",
  *     uniqueConstraints={
  *         @ORM\UniqueConstraint(name="index_client_id_point_id_date_time_is_dst_second_hour",
  *             columns={"client_id", "point_id", "date", "time", "is_dst_second_hour"}
