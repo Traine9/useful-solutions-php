@@ -52,9 +52,13 @@ $timeZoneBerlin = new \DateTimeZone('Europe/Berlin');
  *  If you don't have to handle logic above - remove 1S part from interval
 */
 $interval = new \DateInterval('PT1H1S');
-//print_r(array_map('strval',$periods));
+$intervalHour = new \DateInterval('PT1H');
+
+
 foreach ($periods as $key => $element) {
     /*
+     * Array must be pre sorted dateTime ASC, isDstSecondHour DESC
+     *
      * Here we convert GMT time with daylight saving (DST) to UTC without DST yeah!
      * For example at 2022-10-30 berlin time we have 02:00-02:59 period twice (25 hours day in dst time)
      * IsDstSecondHour means that this is second duplicated period
@@ -69,12 +73,26 @@ foreach ($periods as $key => $element) {
         $element->getDate()->format('Y-m-d ') . $element->getTime()->format('H:i:s'),
         $timeZoneBerlin
     );
+    $isDst = (int) $time->format('I');
+
     $time->setTimezone($timezoneUTC);
     $timestamp = $time->getTimestamp();
+
+    /*
+     * When convert dates we have empty period 00:00 - 01:00 which was shifted from march (winter -> summer dst)
+     * We shift all dates that not in summer dst 1 hour back
+     */
+    if (!$isDst) { //is in dst interval?
+        $time->sub($intervalHour);
+    }
+
+    // but if we find duplicate (IsDstSecondHour) we need to create empty period like 00:00 - 01:00 for values
+    // which duplicated but IsDstSecondHour = 0
     if ($element->getIsDstSecondHour()) {
         $dstHours[$timestamp] = true;
-    } elseif (isset($dstHours[$timestamp])) {
-        $time->sub($interval);
+        $time->add($interval);
+    } elseif (!empty($dstHours) && !isset($dstHours[$timestamp])) {
+        $time->add($interval);
     }
 
     $tmp[$key] = $time->getTimestamp();
